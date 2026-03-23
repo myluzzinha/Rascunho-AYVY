@@ -1,17 +1,673 @@
 :root {
-  --geral-color: #b06edc;
-  --black-color: #000000;
-  --bg: #ffffff;
-  --border: 0.1rem solid rgba(255, 255, 255, 0.3);
-  font-size: 10px;
+  --ayvy-purple: #b06edc;
+  --dark: #191b23;
+}
 
-
-* {
+body {
   margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  overflow-x: hidden;
+  background: #fff;
+}
+
+/* NAVBAR FIXA */
+.navbar-top-fixed {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 70px;
+  background: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.navbar-top-fixed.mobile-only {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .navbar-top-fixed {
+    display: none;
+  }
+
+  .navbar-top-fixed.mobile-only {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    height: 60px;
+    padding: 0 15px;
+  }
+
+  .navbar-top-fixed.mobile-only .nav-left {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0;
+  }
+
+  .navbar-top-fixed.mobile-only .nav-right {
+    display: none; /* Removido, botões no menu */
+  }
+
+  .navbar-top-fixed.mobile-only .logo-brand {
+    font-size: 1.1rem;
+    margin-right: 0;
+  }
+
+  .navbar-top-fixed.mobile-only .nav-link-top {
+    display: none;
+  }
+
+  .navbar-top-fixed.mobile-only .menu-container-sensor:hover .gaveta-flutuante {
+    /* desativar hover no mobile, só clique */
+    opacity: 1;
+    pointer-events: none;
+  }
+
+  .navbar-top-fixed.mobile-only .btn-round {
+    padding: 6px 15px;
+    font-size: 12px;
+  }
+
+  .navbar-top-fixed.mobile-only .logo-brand {
+    font-size: 1.1rem;
+    margin-right: 0;
+  }
+
+  /* Menu lateral mobile */
+  .navbar-top-fixed.mobile-only .gaveta-flutuante {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 80vw;
+    max-width: 280px;
+    height: 100vh;
+    background: white;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.14);
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
+    transform: translateX(-100%);
+    opacity: 0;
+    pointer-events: none;
+    padding: 20px;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .navbar-top-fixed.mobile-only .gaveta-flutuante.open {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .navbar-top-fixed.mobile-only .gaveta-footer {
+    margin-top: auto;
+    position: sticky;
+    bottom: 0;
+    background: white;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+  }
+
+  .gaveta-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .logo-brand-mobile {
+    font-weight: bold;
+    font-size: 24px;
+    color: var(--ayvy-purple);
+  }
+
+  .mobile-buttons {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .mobile-buttons .btn-round {
+    text-align: center;
+  }
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+}
+
+/* PONTO 1: MENU HAMBURGUER PRIMEIRO */
+.menu-container-sensor {
+  position: relative;
+  margin-right: 20px;
+}
+.hamburguer-icon {
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--dark);
+  padding: 5px;
+}
+
+.gaveta-flutuante {
+  position: absolute;
+  top: 29px;
+  left: -10px;
+  width: 220px;
+  background: white;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
+  transition: 0.9s;
+  opacity: 0;
+  pointer-events: none;
+  padding: 20px;
+}
+.menu-container-sensor:hover .gaveta-flutuante {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Mobile drawer overrides */
+.navbar-top-fixed.mobile-only .gaveta-flutuante {
+  position: fixed;
+  top: 0;
+  left: -300px;
+  width: 100%;
+  max-width: 280px;
+  height: 100vh;
+  min-height: 100vh;
+  bottom: 0;
+  box-sizing: border-box;
+  margin: 0;
+  box-shadow: 5px 0 20px rgba(0, 0, 0, 0.15);
+  background: #fff;
+  opacity: 1;
+  pointer-events: auto;
+  transition: left 0.25s ease;
+  padding: 20px;
+  z-index: 1002;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.navbar-top-fixed.mobile-only .gaveta-flutuante.open {
+  left: 0;
+}
+
+.mobile-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease;
+  z-index: 1000;
+}
+
+.mobile-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.gaveta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logo-brand-mobile {
+  font-weight: bold;
+  font-size: 1.4rem;
+  color: var(--ayvy-purple);
+}
+
+.close-menu {
+  cursor: pointer;
+  color: #333;
+}
+
+.navbar-top-fixed.mobile-only .nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   padding: 0;
-  outline: none;
-  border: none;
+}
+
+.navbar-top-fixed.mobile-only .nav-links li {
+  list-style: none;
+  font-size: 1rem;
+  color: #333;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.navbar-top-fixed.mobile-only .nav-right {
+  display: none;
+}
+
+/* A configuração mobile fina está no @media (max-width:768px) */
+
+.mobile-buttons {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 20px;
+}
+
+.mobile-buttons .btn-round {
+  width: calc(100% - 0px);
+  text-align: center;
+  display: inline-flex;
+  justify-content: center;
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 8px 12px;
+  margin: 0;
+  min-height: 36px;
+}
+
+/* PONTO 2: NOME AYVY DEPOIS DO HAMBURGUER */
+.logo-brand {
+  font-weight: bold;
+  font-size: 24px;
+  color: var(--ayvy-purple);
+  cursor: pointer;
+  margin-right: 25px;
+}
+
+.nav-links {
+  list-style: none;
+  padding: 0;
+}
+.nav-links li {
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  color: #333;
+}
+.nav-link-top {
   text-decoration: none;
-  text-transform: capitalize;
-  transition: 0.2s linear;
+  color: #666;
+  margin-right: 20px;
+  font-size: 14px;
+}
+
+/* PONTO DIREITA: NÃO CORTAR BOTÕES */
+.nav-right {
+  padding-right: 50px;
+}
+
+.btn-round {
+  text-decoration: none;
+  color: #333;
+  border: 1px solid #333;
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-size: 14px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+.btn-round.purple {
+  background: var(--ayvy-purple);
+  color: white;
+  border: none;
+}
+
+/* BANNER PONTA A PONTA */
+.banner-total {
+  width: 100vw;
+  margin-top: 70px;
+  text-align: center;
+}
+.img-ponta-a-ponta {
+  width: 100%;
+  display: block;
+}
+
+/* BUSCA */
+.search-overlay-center {
+  padding: 50px 0;
+}
+.main-title {
+  font-size: 38px;
+  color: #222;
+  font-weight: 800;
+  margin-bottom: 30px;
+}
+.search-bar-clean {
+  display: flex; /* Faz o input e o botão ficarem lado a lado */
+  width: 600px; /* Define o comprimento da barra */
+  border: 1px solid #ccc; /* A linha cinza em volta */
+  border-radius: 50px; /* AQUI: é o que deixa ela arredondada */
+  margin: 0 auto; /* Centraliza a barra na tela */
+  overflow: hidden; /* Garante que o conteúdo dentro não saia das bordas */
+}
+/* Este é o espaço onde o usuário escreve o texto */
+.search-bar-clean input {
+  flex: 1;
+  border: none;
+  padding-left: 25px;
+  outline: none;
+  font-size: 16px;
+  border-radius: 50px;
+}
+/* 1. O BOTÃO (Onde fica a cor preta e o tamanho da caixa) */
+.btn-search-black {
+  background: var(--dark);
+  color: white;
+  border: none;
+  padding: 15px 30px; /* Ajusta o preenchimento lateral */
+  border-radius: 50px; /* Deixei 8px para o estilo retangular moderno que você pediu */
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 2. O ÍCONE (A lupinha - apenas o espacinho e o tamanho dela) */
+.btn-search-black i {
+  margin-right: 8px; /* O espaço entre a lupa e a palavra Pesquisar */
+  font-size: 16px; /* O tamanho da lupinha */
+  color: white; /* A cor da lupinha */
+}
+
+/* CARROSSEL */
+.brand-slider-section {
+  padding: 30px 0;
+}
+.slider-title-center {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 18px;
+  color: #333;
+}
+.brand-item {
+  width: 250px;
+  font-weight: 900;
+  color: #777;
+  font-size: 1.2rem;
+  text-align: center;
+}
+.brand-track {
+  display: flex;
+  animation: scroll 20s linear infinite;
+  width: calc(250px * 10);
+}
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-250px * 5));
+  }
+}
+
+/* CARDS */
+.section-title-center {
+  text-align: center;
+  margin: 50px 0 30px;
+  font-size: 26px;
+}
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  padding: 0 50px;
+}
+.card-insta {
+  border: 1px solid #eee;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+.card-header {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+}
+.avatar-mini {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.card-img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+.btn-visit {
+  width: 100%;
+  padding: 12px;
+  background: var(--ayvy-purple);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.site-footer {
+  background: var(--dark);
+  color: white;
+  padding: 40px;
+  text-align: center;
+  margin-top: 50px;
+}
+
+/* Mobile-first adaptations (final overriding block) */
+@media screen and (max-width: 768px) {
+  .navbar-top-fixed {
+    display: none;
+  }
+
+  .navbar-top-fixed.mobile-only {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 58px;
+    z-index: 1000;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 12px;
+  }
+
+  .navbar-top-fixed.mobile-only .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: auto;
+  }
+
+  .navbar-top-fixed.mobile-only .logo-brand {
+    font-size: 1.15rem;
+    color: var(--ayvy-purple);
+  }
+
+  .navbar-top-fixed.mobile-only .nav-right,
+  .navbar-top-fixed.mobile-only .nav-link-top {
+    display: none;
+  }
+
+  .mobile-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.2s ease,
+      visibility 0.2s ease;
+    z-index: 999;
+  }
+
+  .mobile-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .navbar-top-fixed.mobile-only .gaveta-flutuante {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 80vw;
+    max-width: 280px;
+    height: 100vh;
+    background: #fff;
+    box-shadow: 5px 0 20px rgba(0, 0, 0, 0.2);
+    transition: left 0.25s ease;
+    padding: 18px;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .navbar-top-fixed.mobile-only .gaveta-flutuante.open {
+    left: 0;
+  }
+
+  .gavetaflutuante,
+  .gaveta-flutuante {
+    width: 100%;
+  }
+
+  .gaveta-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .logo-brand-mobile {
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  .close-menu {
+    font-size: 1.1rem;
+  }
+
+  .navbar-top-fixed.mobile-only .nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  .navbar-top-fixed.mobile-only .nav-links li {
+    font-size: 1rem;
+    color: #333;
+    padding: 8px 4px;
+    border-radius: 6px;
+  }
+
+  .navbar-top-fixed.mobile-only .gaveta-footer {
+    margin-top: auto;
+  }
+
+  .mobile-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .mobile-buttons .btn-round {
+    width: 100%;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .banner-total {
+    margin-top: 60px;
+  }
+
+  .search-overlay-center {
+    padding: 30px 12px;
+  }
+
+  .main-title {
+    font-size: 24px;
+    margin-bottom: 18px;
+  }
+
+  .search-bar-clean {
+    display: flex;
+    width: min(100%, 100%);
+    max-width: 100%;
+  }
+
+  .search-bar-clean input {
+    font-size: 14px;
+    padding: 12px 14px;
+  }
+
+  .btn-search-black {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .brand-slider-section {
+    padding: 20px 8px;
+  }
+
+  .brand-item {
+    min-width: 170px;
+    font-size: 1rem;
+  }
+
+  .brand-track {
+    width: auto;
+    animation: none;
+    overflow-x: auto;
+    gap: 12px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .brand-track .brand-item {
+    scroll-snap-align: start;
+  }
+
+  .profile-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 0 12px 20px;
+  }
+
+  .card-img {
+    height: 200px;
+  }
+
+  .site-footer {
+    padding: 20px;
+  }
 }
