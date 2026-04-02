@@ -58,3 +58,43 @@ function onDocumentKeydown(event) {
 }
 
 document.addEventListener("keydown", onDocumentKeydown);
+
+// Faz a janelinha do carrinho abrir e fechar
+function toggleCarrinho() {
+  const modal = document.getElementById("janela-carrinho");
+  modal.classList.toggle("show");
+}
+
+// Faz o efeito de "Logado": esconde botões e mostra o carrinho
+function logarUsuario() {
+  document.getElementById("btn-login").classList.add("hidden");
+  document.getElementById("btn-cadastro").classList.add("hidden");
+  document.getElementById("container-carrinho").classList.remove("hidden");
+}
+
+// Função para fechar o menu mobile ao clicar em um link
+function closeMobileMenu() {
+  const menu = document.getElementById("mobileMenu");
+  if (menu) menu.classList.remove("open");
+}
+
+/* ============================================================
+   FILTRO DO CARROSSEL: APENAS LOJAS COM +50k VIEWS
+   ============================================================ 
+function filtrarCarrossel() {
+  const marcas = document.querySelectorAll('.brand-item'); // Pega todas as marcas
+  const metaViews = 50000; // Define a sua meta de 50 mil
+
+  marcas.forEach(marca => {
+    // Pega o número de views que a gente escreveu no HTML
+    const views = parseInt(marca.getAttribute('data-views'));
+
+    if (views < metaViews) {
+      // Se for menor que 50.000, remove a loja do carrossel
+      marca.remove(); 
+    }
+  });
+}
+
+// Executa a função assim que o site carrega
+window.addEventListener('DOMContentLoaded', filtrarCarrossel); */
