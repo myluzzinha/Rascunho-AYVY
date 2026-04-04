@@ -59,18 +59,116 @@ function onDocumentKeydown(event) {
 
 document.addEventListener("keydown", onDocumentKeydown);
 
-// Faz a janelinha do carrinho abrir e fechar
+// Abrir/fechar o carrinho lateral
 function toggleCarrinho() {
-  const modal = document.getElementById("janela-carrinho");
-  modal.classList.toggle("show");
+  const drawer = document.getElementById("cartDrawer");
+  const overlay = document.getElementById("cartOverlay");
+  if (!drawer || !overlay) return;
+  const isOpen = drawer.classList.toggle("open");
+  overlay.classList.toggle("active", isOpen);
 }
 
-// Faz o efeito de "Logado": esconde botões e mostra o carrinho
+// Exibir botão de carrinho apenas após o usuário estar logado
 function logarUsuario() {
   document.getElementById("btn-login").classList.add("hidden");
   document.getElementById("btn-cadastro").classList.add("hidden");
-  document.getElementById("container-carrinho").classList.remove("hidden");
+  const cartIcon = document.getElementById("cartIcon");
+  if (cartIcon) cartIcon.style.display = "flex";
 }
+
+// Função para abrir a confirmação de logout
+function showLogoutConfirm() {
+  document.getElementById("logoutOverlay").classList.add("active");
+  document.getElementById("logoutModal").classList.add("active");
+}
+
+// Função para esconder a confirmação de logout
+function hideLogoutConfirm() {
+  document.getElementById("logoutOverlay").classList.remove("active");
+  document.getElementById("logoutModal").classList.remove("active");
+}
+
+// Função chamada quando o usuário confirma o logout
+function confirmLogout() {
+  hideLogoutConfirm();
+  logoutUsuario();
+}
+
+// Função para simular logout e restaurar os botões de login/cadastro
+function logoutUsuario() {
+  document.getElementById("btn-login").classList.remove("hidden");
+  document.getElementById("btn-cadastro").classList.remove("hidden");
+  const cartIcon = document.getElementById("cartIcon");
+  if (cartIcon) cartIcon.style.display = "none";
+}
+
+// Estado local do carrinho
+let cart = [];
+
+// Adiciona produto ao carrinho e atualiza a interface
+function addToCart(productName, productImage) {
+  cart.push({ name: productName, image: productImage });
+  updateCartUI();
+  showMessage("Produto adicionado com sucesso!");
+}
+
+// Re-renderiza os itens e contador do carrinho
+function updateCartUI() {
+  const cartItems = document.getElementById("cartItems");
+  const cartCount = document.getElementById("cartCount");
+  if (!cartItems || !cartCount) return;
+  cartItems.innerHTML = "";
+  cart.forEach((item) => {
+    cartItems.innerHTML += `
+      <div class="cart-item">
+        <img src="${item.image}" alt="${item.name}" />
+        <span>${item.name}</span>
+      </div>
+    `;
+  });
+  cartCount.textContent = cart.length;
+}
+
+// Mensagem temporária ao adicionar produto
+function showMessage(message) {
+  const msg = document.createElement("div");
+  msg.textContent = message;
+  msg.style.position = "fixed";
+  msg.style.top = "50%";
+  msg.style.left = "50%";
+  msg.style.transform = "translate(-50%, -50%)";
+  msg.style.background = "green";
+  msg.style.color = "white";
+  msg.style.padding = "12px 18px";
+  msg.style.borderRadius = "8px";
+  msg.style.zIndex = "1004";
+  document.body.appendChild(msg);
+  setTimeout(() => msg.remove(), 2000);
+}
+
+// Calcula frete com base no CEP informado
+function calculateFreight() {
+  const cep = document.getElementById("cepInput").value.trim();
+  const result = document.getElementById("freightResult");
+  if (!result) return;
+  result.textContent =
+    cep.length === 8 ? "Frete calculado: R$ 15,00" : "CEP inválido";
+}
+
+// Finaliza compra e esvazia o carrinho
+function finalizePurchase() {
+  if (cart.length > 0) {
+    alert("Compra finalizada! Obrigado por comprar na AYVY.");
+    cart = [];
+    updateCartUI();
+    toggleCarrinho();
+  } else {
+    alert("Carrinho vazio!");
+  }
+}
+
+// Botões "Ver Loja" são apenas para ver o perfil/loja, não para adicionar ao carrinho.
+// Se quiser adicionar um botão de compra depois, podemos criar um novo botão específico para isso.
 
 // Função para fechar o menu mobile ao clicar em um link
 function closeMobileMenu() {
