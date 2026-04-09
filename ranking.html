@@ -210,8 +210,8 @@
       }
 
       .star-icon {
-        color: #ffd700;
-        margin-right: 8px;
+        color: #daa520;
+        /* margin-right: 8px; */
       }
 
       .store-profile {
@@ -286,7 +286,7 @@
 
     <main class="ranking-wrapper">
       <header class="ranking-header">
-        <h1>Ranking de Visibilidade</h1>
+        <h1>Ranking de Visibilidade Mensal</h1>
         <p>Lojas parceiras com maior engajamento (+10k views).</p>
       </header>
 
@@ -357,6 +357,7 @@
           .map((loja, i) => {
             const isTop = i < 3;
             const rowClass = isTop ? 'class="row-highlight"' : "";
+            // Criamos a variável da estrela aqui
             const star = isTop ? `<i class="fas fa-star star-icon"></i>` : "";
 
             return `
@@ -365,11 +366,15 @@
                         <td>
                             <div class="store-profile">
                                 <img src="${loja.img || "https://via.placeholder.com/40"}" alt="logo">
-                                <span style="font-weight: 600;">${star}${loja.nome}</span>
+                                <span style="font-weight: 600;">${loja.nome}</span>
                             </div>
                         </td>
                         <td class="views-count">${loja.views.toLocaleString("pt-BR")}</td>
-                        <td><span class="status-pill">VERIFICADO</span></td>
+                        <td>
+                            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 10px;">
+                                ${star} <span class="status-pill">VERIFICADO</span>
+                            </div>
+                        </td>
                     </tr>
                 `;
           })
